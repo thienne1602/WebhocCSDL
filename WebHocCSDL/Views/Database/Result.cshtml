@@ -1,0 +1,42 @@
+﻿@model WebHocCSDL.Models.DatabaseDesign
+@{
+    ViewData["Title"] = "Kết quả thiết kế";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <h2 class="text-center mb-4">Kết quả thiết kế cơ sở dữ liệu</h2>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Phân tích nhu cầu</h5>
+                <p class="card-text">@Model.RequirementDescription</p>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Thiết kế quan niệm</h5>
+                <p class="card-text">@Model.ConceptualDesign</p>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Biểu đồ ERD</h5>
+                <div class="mermaid text-center">
+                    @Html.Raw(Model.ERD)
+                </div>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Thiết kế logic</h5>
+                <p class="card-text">@Model.LogicalDesign</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Thiết kế vật lý</h5>
+                <pre class="card-text">@Model.PhysicalDesign</pre>
+            </div>
+        </div>
+    </div>
+</div>

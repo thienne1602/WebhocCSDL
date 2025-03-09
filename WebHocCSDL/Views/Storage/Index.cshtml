@@ -1,0 +1,27 @@
+﻿@model List<WebHocCSDL.Models.DatabaseDesign>
+@{
+    ViewData["Title"] = "Kho lưu trữ";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <h2 class="text-center mb-4">Danh sách thiết kế CSDL</h2>
+        @if (Model.Any())
+        {
+            <div class="list-group">
+                @foreach (var design in Model)
+                {
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">@design.RequirementDescription</h5>
+                        </div>
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-center">Chưa có thiết kế nào được lưu.</p>
+        }
+    </div>
+</div>

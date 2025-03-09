@@ -1,0 +1,16 @@
+﻿@model List<string>
+@{
+    ViewData["Title"] = "Bài tập gợi ý";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="text-center mb-4">Bài tập gợi ý</h2>
+        <div class="list-group">
+            @foreach (var exercise in Model)
+            {
+                <a href="#" class="list-group-item list-group-item-action">@exercise</a>
+            }
+        </div>
+    </div>
+</div>
