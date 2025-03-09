@@ -3,25 +3,45 @@
     ViewData["Title"] = "Kho lưu trữ";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-10">
-        <h2 class="text-center mb-4">Danh sách thiết kế CSDL</h2>
-        @if (Model.Any())
-        {
-            <div class="list-group">
-                @foreach (var design in Model)
-                {
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">@design.RequirementDescription</h5>
-                        </div>
-                    </a>
-                }
-            </div>
-        }
-        else
-        {
-            <p class="text-center">Chưa có thiết kế nào được lưu.</p>
-        }
-    </div>
+<div class="container mt-4">
+    <h2 class="text-center mb-4">📁 Danh sách Thiết Kế CSDL</h2>
+
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Mô tả yêu cầu</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Select((design, index) => new { design, index }))
+                    {
+                        <tr>
+                            <td>@(item.index + 1)</td> @* STT tự động từ 1, 2, 3,... *@
+                            <td>@item.design.RequirementDescription</td>
+                            <td>
+                                <a href="@Url.Action("Details", "Storage", new { id = item.design.Id })" class="btn btn-info btn-sm">
+                                    🔍 Xem
+                                </a>
+                                <form method="post" asp-action="Delete" asp-route-id="@item.design.Id" class="d-inline"
+                                      onsubmit="return confirm('Bạn có chắc muốn xóa thiết kế này không?');">
+                                    <button type="submit" class="btn btn-danger btn-sm">🗑 Xóa</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center" role="alert">
+            🚀 Chưa có thiết kế nào được lưu! Hãy bắt đầu tạo thiết kế ngay.
+        </div>
+    }
 </div>

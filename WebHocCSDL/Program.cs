@@ -6,6 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Thêm dịch vụ MVC
 builder.Services.AddControllersWithViews();
 
+// Đăng ký HttpClient
+builder.Services.AddHttpClient(); // ✅ Thêm dòng này
+
 // Đăng ký DbContext với EnableRetryOnFailure
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),

@@ -1,42 +1,66 @@
 ﻿@model WebHocCSDL.Models.DatabaseDesign
+
 @{
     ViewData["Title"] = "Kết quả thiết kế";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-10">
-        <h2 class="text-center mb-4">Kết quả thiết kế cơ sở dữ liệu</h2>
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Phân tích nhu cầu</h5>
-                <p class="card-text">@Model.RequirementDescription</p>
-            </div>
-        </div>
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Thiết kế quan niệm</h5>
-                <p class="card-text">@Model.ConceptualDesign</p>
-            </div>
-        </div>
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Biểu đồ ERD</h5>
-                <div class="mermaid text-center">
-                    @Html.Raw(Model.ERD)
-                </div>
-            </div>
-        </div>
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Thiết kế logic</h5>
-                <p class="card-text">@Model.LogicalDesign</p>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Thiết kế vật lý</h5>
-                <pre class="card-text">@Model.PhysicalDesign</pre>
-            </div>
+<div class="container mt-4">
+    <h2 class="text-center mb-4">📌 Kết quả thiết kế CSDL</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <h4>📌 Yêu cầu nhập vào</h4>
+            <p>@Model.RequirementDescription</p>
         </div>
     </div>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <h4>📌 Mô hình ERD (Chuỗi mã)</h4>
+            @if (string.IsNullOrEmpty(Model.ERD))
+            {
+                <p class="text-danger">Không thể tạo ERD. Vui lòng kiểm tra dữ liệu đầu vào.</p>
+            }
+            else
+            {
+                <pre class="erd-code">@Html.Raw(Model.ERD)</pre>
+                <p class="mt-2">
+                    <strong>Hướng dẫn:</strong> Sao chép chuỗi mã ERD trên và dán vào
+                    <a href="https://mermaid.live/" target="_blank" rel="noopener noreferrer">Mermaid Live Editor</a>
+                    để xem sơ đồ ERD.
+                </p>
+            }
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <h4>📌 Thiết kế Logical</h4>
+            <pre>@Model.LogicalDesign</pre>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <h4>📌 Thiết kế Physical (SQL)</h4>
+            <pre>@Model.PhysicalDesign</pre>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="@Url.Action("Create", "Database")" class="btn btn-secondary">🔄 Nhập yêu cầu khác</a>
+        <a href="@Url.Action("Index", "Storage")" class="btn btn-primary">📂 Xem danh sách thiết kế</a>
+    </div>
 </div>
+
+<style>
+    .erd-code {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-family: 'Courier New', Courier, monospace;
+    }
+</style>

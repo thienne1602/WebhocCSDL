@@ -1,22 +1,17 @@
 ﻿@model WebHocCSDL.Models.DatabaseRequest
+
 @{
-    ViewData["Title"] = "Tạo cơ sở dữ liệu";
+    ViewData["Title"] = "Nhập yêu cầu thiết kế CSDL";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <h2 class="text-center mb-4">Nhập yêu cầu để tạo cơ sở dữ liệu</h2>
-        <form asp-action="Create" method="post" class="border p-4 rounded bg-light">
-            <div class="mb-3">
-                <label asp-for="RequestText" class="form-label">Yêu cầu của bạn</label>
-                <textarea asp-for="RequestText" class="form-control" rows="5" placeholder="Ví dụ: Quản lý đơn hàng gồm: Mã đơn hàng, Ngày đặt, Trạng thái..."></textarea>
-                <span asp-validation-for="RequestText" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Tạo CSDL</button>
-        </form>
-    </div>
+<div class="container mt-4">
+    <h2 class="text-center mb-4">📌 Nhập Yêu Cầu Thiết Kế CSDL</h2>
+
+    <form asp-action="Create" method="post">
+        <div class="mb-3">
+            <label for="RequestText" class="form-label">Nhập yêu cầu của bạn:</label>
+            <textarea asp-for="RequestText" class="form-control" rows="4" placeholder="Ví dụ: Quản lý sinh viên, bán hàng online,..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">🚀 Tạo Thiết Kế</button>
+    </form>
 </div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

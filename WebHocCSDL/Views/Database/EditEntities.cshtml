@@ -1,0 +1,188 @@
+﻿@model WebHocCSDL.Models.DatabaseDesign
+
+@{
+    ViewData["Title"] = "Chỉnh sửa thực thể và mối quan hệ";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">📝 Chỉnh sửa thực thể và mối quan hệ</h2>
+
+    <form asp-action="ConfirmEntities" method="post">
+        <!-- Yêu cầu -->
+        <input type="hidden" asp-for="RequirementDescription" />
+
+        <!-- Thực thể -->
+        <h4>📌 Danh sách thực thể</h4>
+        @for (int i = 0; i < Model.Entities?.Count; i++)
+        {
+            <div class="card mt-3 entity-card" data-index="@i">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <label class="form-label">Tên thực thể</label>
+                            <input type="text" class="form-control" asp-for="Entities[i].Name" />
+                        </div>
+                        <div class="col-md-7">
+                            <label class="form-label">Thuộc tính (cách nhau bởi dấu phẩy)</label>
+                            <input type="text" class="form-control" asp-for="Entities[i].Attributes" value="@string.Join(", ", Model.Entities[i].Attributes ?? new List<string>())" />
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-danger btn-sm mt-4 delete-entity">Xóa</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Nút thêm thực thể -->
+        <div class="text-center mt-3">
+            <button type="button" class="btn btn-success" id="add-entity">+ Thêm thực thể</button>
+        </div>
+
+        <!-- Mối quan hệ -->
+        <h4 class="mt-5">📌 Danh sách mối quan hệ</h4>
+        @for (int i = 0; i < Model.Relationships?.Count; i++)
+        {
+            <div class="card mt-3 relationship-card" data-index="@i">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <label class="form-label">Thực thể 1</label>
+                            <input type="text" class="form-control" asp-for="Relationships[i].Entity1" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Thực thể 2</label>
+                            <input type="text" class="form-control" asp-for="Relationships[i].Entity2" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Kiểu mối quan hệ</label>
+                            <select class="form-control" asp-for="Relationships[i].Type">
+                                <option value="1:1">1:1</option>
+                                <option value="1:N">1:N</option>
+                                <option value="N:N">N:N</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-danger btn-sm mt-4 delete-relationship">Xóa</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Nút thêm mối quan hệ -->
+        <div class="text-center mt-3">
+            <button type="button" class="btn btn-success" id="add-relationship">+ Thêm mối quan hệ</button>
+        </div>
+
+        <!-- Nút xác nhận -->
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">✔ Xác nhận và tạo thiết kế</button>
+            <a href="@Url.Action("Create", "Database")" class="btn btn-secondary">🔙 Quay lại</a>
+        </div>
+    </form>
+</div>
+
+<!-- JavaScript để xử lý thêm/xóa -->
+<script>
+    // Thêm thực thể mới
+    document.getElementById('add-entity').addEventListener('click', function () {
+        const entitiesContainer = document.querySelectorAll('.entity-card');
+        const newIndex = entitiesContainer.length;
+        const newEntityHtml = `
+            <div class="card mt-3 entity-card" data-index="${newIndex}">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <label class="form-label">Tên thực thể</label>
+                            <input type="text" class="form-control" name="Entities[${newIndex}].Name" />
+                        </div>
+                        <div class="col-md-7">
+                            <label class="form-label">Thuộc tính (cách nhau bởi dấu phẩy)</label>
+                            <input type="text" class="form-control" name="Entities[${newIndex}].Attributes" />
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-danger btn-sm mt-4 delete-entity">Xóa</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        document.querySelector('form').insertBefore(new DOMParser().parseFromString(newEntityHtml, 'text/html').body.firstChild, document.getElementById('add-entity').parentNode);
+        attachDeleteListeners();
+    });
+
+    // Thêm mối quan hệ mới
+    document.getElementById('add-relationship').addEventListener('click', function () {
+        const relationshipsContainer = document.querySelectorAll('.relationship-card');
+        const newIndex = relationshipsContainer.length;
+        const newRelationshipHtml = `
+            <div class="card mt-3 relationship-card" data-index="${newIndex}">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <label class="form-label">Thực thể 1</label>
+                            <input type="text" class="form-control" name="Relationships[${newIndex}].Entity1" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Thực thể 2</label>
+                            <input type="text" class="form-control" name="Relationships[${newIndex}].Entity2" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Kiểu mối quan hệ</label>
+                            <select class="form-control" name="Relationships[${newIndex}].Type">
+                                <option value="1:1">1:1</option>
+                                <option value="1:N">1:N</option>
+                                <option value="N:N">N:N</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-danger btn-sm mt-4 delete-relationship">Xóa</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        document.querySelector('form').insertBefore(new DOMParser().parseFromString(newRelationshipHtml, 'text/html').body.firstChild, document.getElementById('add-relationship').parentNode);
+        attachDeleteListeners();
+    });
+
+    // Xử lý xóa thực thể và mối quan hệ
+    function attachDeleteListeners() {
+        document.querySelectorAll('.delete-entity').forEach(button => {
+            button.addEventListener('click', function () {
+                this.closest('.entity-card').remove();
+                updateEntityIndices();
+            });
+        });
+
+        document.querySelectorAll('.delete-relationship').forEach(button => {
+            button.addEventListener('click', function () {
+                this.closest('.relationship-card').remove();
+                updateRelationshipIndices();
+            });
+        });
+    }
+
+    // Cập nhật chỉ số của thực thể sau khi xóa
+    function updateEntityIndices() {
+        const entityCards = document.querySelectorAll('.entity-card');
+        entityCards.forEach((card, index) => {
+            card.dataset.index = index;
+            card.querySelector('input[name$=".Name"]').name = `Entities[${index}].Name`;
+            card.querySelector('input[name$=".Attributes"]').name = `Entities[${index}].Attributes`;
+        });
+    }
+
+    // Cập nhật chỉ số của mối quan hệ sau khi xóa
+    function updateRelationshipIndices() {
+        const relationshipCards = document.querySelectorAll('.relationship-card');
+        relationshipCards.forEach((card, index) => {
+            card.dataset.index = index;
+            card.querySelector('input[name$=".Entity1"]').name = `Relationships[${index}].Entity1`;
+            card.querySelector('input[name$=".Entity2"]').name = `Relationships[${index}].Entity2`;
+            card.querySelector('select[name$=".Type"]').name = `Relationships[${index}].Type`;
+        });
+    }
+
+    // Gắn sự kiện xóa khi tải trang
+    attachDeleteListeners();
+</script>

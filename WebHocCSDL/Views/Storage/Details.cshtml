@@ -1,0 +1,37 @@
+﻿@model WebHocCSDL.Models.DatabaseDesign
+
+<h2>Details</h2>
+
+<div>
+    <h4>Database Design</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Requirement Description
+        </dt>
+        <dd class="col-sm-10">
+            @Model.RequirementDescription
+        </dd>
+        <dt class="col-sm-2">
+            ERD (Conceptual Design)
+        </dt>
+        <dd class="col-sm-10">
+            <pre>@Model.ERD</pre>
+        </dd>
+        <dt class="col-sm-2">
+            Logical Design
+        </dt>
+        <dd class="col-sm-10">
+            <pre>@Model.LogicalDesign</pre>
+        </dd>
+        <dt class="col-sm-2">
+            Physical Design
+        </dt>
+        <dd class="col-sm-10">
+            <pre>@Model.PhysicalDesign</pre>
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
